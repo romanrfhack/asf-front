@@ -1,0 +1,59 @@
+.install-instructions-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.install-instructions-page h1 {
+  color: #1a3e6f;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.instructions, .benefits {
+  margin-bottom: 2rem;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.instructions h2, .benefits h2 {
+  color: #2c5282;
+  margin-bottom: 1rem;
+}
+
+.instructions ol, .benefits ul {
+  padding-left: 1.5rem;
+}
+
+.instructions li, .benefits li {
+  margin-bottom: 0.5rem;
+}
+
+.benefits li:before {
+  content: "✓ ";
+  color: #48bb78;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.back-button {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.back-button button {
+  background: #1a3e6f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.back-button button:hover {
+  background: #2c5282;
+}

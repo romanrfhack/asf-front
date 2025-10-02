@@ -1,0 +1,40 @@
+<!-- Header -->
+<header class="app-header">
+  <div class="container">
+    <img src="ASMLogo.webp" alt="ASFM Logo" class="logo">
+    <h1>American School Foundation of Monterrey</h1>
+    @if (showInstallButton) {
+      <button class="install-btn" (click)="showInstallPrompt = true">
+        Instalar App
+      </button>
+    }
+  </div>
+</header>
+
+<!-- Navegación -->
+<nav class="main-nav">
+  <div class="container">
+    <a routerLink="/" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+    <a routerLink="/about" routerLinkActive="active">Acerca de</a>
+    <a routerLink="/install" routerLinkActive="active">Instalar App</a>
+  </div>
+</nav>
+
+<!-- Contenido principal -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Modal de instalación -->
+@if (showInstallPrompt) {
+  <app-install-prompt (close)="showInstallPrompt = false"></app-install-prompt>
+}
+
+<!-- Footer -->
+<footer class="app-footer">
+  <div class="container">
+    <p>&copy; 2024 American School Foundation of Monterrey. Todos los derechos reservados.</p>
+  </div>
+</footer>
