@@ -1,0 +1,89 @@
+<div *ngIf="ins" class="space-y-4">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="text-lg font-semibold capitalize">Inspection — {{ ins.type }}</div>
+        <div class="text-xs text-slate-500">Status: {{ ins.status }} • Updated: {{ ins.updatedAt | date:'short' }}</div>
+      </div>
+      <div class="flex gap-2">
+        <button (click)="exportJSON()" class="px-3 py-1 rounded border text-sm">Export JSON</button>
+        <button (click)="exportHTML()" class="px-3 py-1 rounded border text-sm">Export HTML</button>
+        <button (click)="finalize()" class="px-3 py-1 rounded bg-emerald-600 text-white text-sm" [disabled]="ins.status==='finalized'">Finalize</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Details</div>
+    <div class="grid gap-3 sm:grid-cols-3">
+      <div>
+        <label class="block text-sm font-medium">Occupant name</label>
+        <input [(ngModel)]="occupantName" class="mt-1 w-full rounded border px-3 py-2">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Scheduled at</label>
+        <input [(ngModel)]="scheduledAt" type="datetime-local" class="mt-1 w-full rounded border px-3 py-2">
+      </div>
+      <div class="flex items-end">
+        <button (click)="saveDetails()" class="px-3 py-2 rounded bg-slate-900 text-white">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rooms -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium">Rooms checklist</div>
+    <div class="mt-2 grid gap-2 sm:grid-cols-3">
+      <input [(ngModel)]="roomName" class="rounded border px-3 py-2" placeholder="New room name">
+      <input [(ngModel)]="itemText" class="rounded border px-3 py-2" placeholder="New item for selected room (use + button below)">
+      <div class="flex items-center gap-2">
+        <button (click)="addRoom()" class="px-3 py-2 rounded border">Add room</button>
+      </div>
+    </div>
+
+    <div class="mt-3 grid gap-3">
+      <div *ngFor="let r of ins.rooms" class="rounded border p-3">
+        <div class="font-medium">{{ r.name }}</div>
+        <div class="mt-2 flex items-center gap-2">
+          <input [(ngModel)]="itemText" class="flex-1 rounded border px-3 py-1 text-sm" placeholder="Add item...">
+          <button (click)="addItem(r.id)" class="px-3 py-1 rounded bg-slate-900 text-white text-sm">+ Add</button>
+        </div>
+        <div class="mt-2 grid gap-2">
+          <label *ngFor="let i of r.items" class="flex items-center gap-2 text-sm">
+            <input type="checkbox" [checked]="i.done" (change)="toggleItem(r.id, i.id)">
+            <span [class.line-through]="i.done">{{ i.text }}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photos -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium">Photos</div>
+    <input type="file" (change)="addPhotos($event)" accept="image/*" multiple class="mt-2">
+    <div class="grid grid-cols-3 gap-2 mt-3">
+      <img *ngFor="let p of ins.photos || []" [src]="p" class="w-full h-24 object-cover rounded">
+    </div>
+  </div>
+
+  <!-- Notes & Signatures -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="md:col-span-2">
+        <div class="font-medium mb-2">Notes</div>
+        <textarea [(ngModel)]="notes" rows="6" class="w-full rounded border px-3 py-2"></textarea>
+        <div class="pt-2">
+          <button (click)="saveNotes()" class="px-3 py-1 rounded border">Save notes</button>
+        </div>
+      </div>
+      <div>
+        <div class="font-medium mb-1">Tenant signature</div>
+        <signature-pad [existing]="ins.tenantSignature" (saved)="setTenantSig($event)"></signature-pad>
+        <div class="font-medium mt-3 mb-1">Inspector signature</div>
+        <signature-pad [existing]="ins.inspectorSignature" (saved)="setInspectorSig($event)"></signature-pad>
+      </div>
+    </div>
+  </div>
+</div>

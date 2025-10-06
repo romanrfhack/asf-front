@@ -1,0 +1,15 @@
+<h2 class="text-lg font-semibold">Owner documents</h2>
+<div class="mt-3 grid gap-3">
+  <div *ngFor="let d of docs()" class="bg-white rounded-xl shadow p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="font-medium">{{ d.title }}</div>
+        <div class="text-xs text-slate-500">Updated: {{ d.updatedAt | date:'medium' }}</div>
+      </div>
+      <button (click)="view(d.id)" class="text-sm underline">View</button>
+    </div>
+    <div *ngIf="selectedId === d.id" class="mt-3 text-sm text-slate-700 whitespace-pre-wrap">
+      {{ getDoc(d.id)?.content || 'No preview available.' }}
+    </div>
+  </div>
+</div>

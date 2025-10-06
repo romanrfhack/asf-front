@@ -1,0 +1,22 @@
+<h2 class="text-lg font-semibold mb-3">Tickets board</h2>
+<div class="grid md:grid-cols-3 lg:grid-cols-6 gap-3">
+  <div *ngFor="let c of cols" class="bg-white rounded-xl shadow p-3">
+    <div class="flex items-center justify-between">
+      <div class="font-semibold">{{ c.label }}</div>
+      <div class="text-xs text-slate-500">{{ list(c.key).length }}</div>
+    </div>
+    <div class="mt-2 space-y-2">
+      <div *ngFor="let t of list(c.key)" class="rounded border p-2">
+        <div class="text-sm font-medium">{{ t.title }}</div>
+        <div class="text-xs text-slate-500">Due: {{ t.dueAt | date:'short' }}</div>
+        <div class="flex gap-1 mt-2 flex-wrap">
+          <button *ngFor="let dest of cols" (click)="move(t.id, dest.key)"
+                  class="text-[10px] px-2 py-1 border rounded hover:bg-slate-50"
+                  [disabled]="dest.key === c.key">
+            {{ dest.label }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

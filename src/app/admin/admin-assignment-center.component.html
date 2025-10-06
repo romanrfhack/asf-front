@@ -1,0 +1,60 @@
+<h2 class="text-lg font-semibold">Assignment Center</h2>
+
+<div class="grid md:grid-cols-2 gap-4 mt-2">
+  <!-- Unassigned tickets -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Unassigned tickets</div>
+    <div class="space-y-2">
+      <div *ngFor="let t of unassigned" class="rounded border p-3">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="font-medium">{{ t.title }}</div>
+            <div class="text-xs text-slate-500">Status: {{ t.status }} • Due: {{ t.dueAt | date:'short' }}</div>
+          </div>
+          <button (click)="assign(t.id)" class="text-sm px-3 py-1 rounded bg-slate-900 text-white">Assign</button>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-2 mt-3">
+          <div>
+            <label class="block text-xs text-slate-500">Technician</label>
+            <select [(ngModel)]="selectedTech" class="w-full rounded border px-2 py-1 text-sm">
+              <option *ngFor="let u of techs" [value]="u.id">{{ u.name }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-500">Request for</label>
+            <input [(ngModel)]="requestedFor" type="datetime-local" class="w-full rounded border px-2 py-1 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-500">Priority (1-5)</label>
+            <input [(ngModel)]="priority" type="number" min="1" max="5" class="w-full rounded border px-2 py-1 text-sm">
+          </div>
+        </div>
+        <div class="mt-2">
+          <label class="block text-xs text-slate-500">Notes</label>
+          <textarea [(ngModel)]="note" rows="2" class="w-full rounded border px-2 py-1 text-sm"></textarea>
+          <div class="pt-2">
+            <button (click)="addToWaitlist(t.id)" class="text-sm px-3 py-1 rounded border">Add to Waitlist</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waitlist -->
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Waitlist</div>
+    <div class="space-y-2">
+      <div *ngFor="let w of waitlist" class="rounded border p-3">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-sm">Ticket: {{ w.ticketId }}</div>
+            <div class="text-xs text-slate-500">Requested: {{ w.requestedFor || 'TBD' }} • Priority: {{ w.priority }} • Created: {{ w.createdAt | date:'short' }}</div>
+            <div class="text-xs text-slate-700 mt-1" *ngIf="w.notes">{{ w.notes }}</div>
+          </div>
+          <button (click)="removeWait(w.id)" class="text-sm underline">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

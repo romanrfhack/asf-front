@@ -1,0 +1,22 @@
+<div class="space-y-4">
+  <h2 class="text-lg font-semibold">My requests</h2>
+
+  <div class="grid gap-3">
+    <div *ngFor="let t of tickets()" class="rounded-xl bg-white shadow p-4">
+      <div class="flex items-start justify-between">
+        <div class="font-medium">{{ t.title }}</div>
+        <span class="text-xs rounded-full px-2 py-1 border" [class]="
+          t.priority==='urgent' ? 'border-red-400 text-red-600' :
+          t.priority==='high' ? 'border-orange-400 text-orange-600' :
+          t.priority==='medium' ? 'border-amber-400 text-amber-600' :
+          'border-slate-300 text-slate-600'
+        ">{{ t.priority }}</span>
+      </div>
+      <div class="text-sm text-slate-600 mt-1">{{ t.description }}</div>
+      <div class="mt-2 flex items-center gap-3 text-xs text-slate-500">
+        <span>Status: <b class="capitalize">{{ t.status.replace('_', ' ') }}</b></span>
+        <span>Due: {{ t.dueAt | date:'medium' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

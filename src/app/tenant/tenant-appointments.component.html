@@ -1,0 +1,40 @@
+<h2 class="text-lg font-semibold">Appointments</h2>
+
+<div class="bg-white rounded-xl shadow p-4 mt-2">
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div class="sm:col-span-2">
+      <label class="block text-sm font-medium">Title</label>
+      <input [(ngModel)]="title" class="mt-1 w-full rounded border px-3 py-2" placeholder="e.g., AC inspection">
+    </div>
+    <div>
+      <label class="block text-sm font-medium">When</label>
+      <input [(ngModel)]="when" type="datetime-local" class="mt-1 w-full rounded border px-3 py-2">
+    </div>
+    <div class="sm:col-span-3">
+      <label class="block text-sm font-medium">Notes (optional)</label>
+      <textarea [(ngModel)]="notes" rows="2" class="mt-1 w-full rounded border px-3 py-2"></textarea>
+    </div>
+  </div>
+  <div class="pt-3">
+    <button (click)="add()" class="px-4 py-2 rounded-lg bg-slate-900 text-white">Add appointment</button>
+  </div>
+</div>
+
+<div class="mt-4 grid gap-3">
+  <div *ngFor="let a of items" class="bg-white rounded-xl shadow p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="font-medium">{{ a.title }}</div>
+        <div class="text-xs text-slate-500">When: {{ a.when | date:'medium' }}</div>
+        <div class="text-xs text-slate-500">Status: <b>{{ a.status | uppercase }}</b></div>
+        <div class="text-sm text-slate-700 mt-1" *ngIf="a.notes">{{ a.notes }}</div>
+      </div>
+      <div class="flex gap-1 flex-wrap justify-end">
+        <button class="text-[10px] px-2 py-1 border rounded" (click)="setStatus(a.id, 'requested')">Requested</button>
+        <button class="text-[10px] px-2 py-1 border rounded" (click)="setStatus(a.id, 'confirmed')">Confirmed</button>
+        <button class="text-[10px] px-2 py-1 border rounded" (click)="setStatus(a.id, 'done')">Done</button>
+        <button class="text-[10px] px-2 py-1 border rounded" (click)="setStatus(a.id, 'cancelled')">Cancelled</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="max-w-xl mx-auto bg-white rounded-2xl shadow p-5">
+  <h2 class="text-lg font-semibold">Report an issue</h2>
+  <p class="text-sm text-slate-600">Provide a short title, details and pick a priority.</p>
+
+  <div class="mt-4 space-y-3">
+    <div>
+      <label class="block text-sm font-medium">Title</label>
+      <input [(ngModel)]="title" placeholder="e.g., AC not cooling" class="mt-1 w-full rounded border px-3 py-2">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Description</label>
+      <textarea [(ngModel)]="description" rows="4" placeholder="Add details and location..."
+        class="mt-1 w-full rounded border px-3 py-2"></textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Priority</label>
+      <select [(ngModel)]="priority" class="mt-1 w-full rounded border px-3 py-2">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="urgent">Urgent</option>
+      </select>
+    </div>
+
+    <div class="pt-2">
+      <button (click)="submit()" class="px-4 py-2 rounded-lg bg-slate-900 text-white">Submit</button>
+    </div>
+  </div>
+</div>

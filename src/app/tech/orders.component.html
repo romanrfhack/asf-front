@@ -1,0 +1,13 @@
+<h2 class="text-lg font-semibold">My Orders</h2>
+
+<div class="mt-3 grid gap-3">
+  <a *ngFor="let t of items" [routerLink]="['/tech/ticket', t.id]" class="bg-white rounded-xl shadow p-4 block hover:shadow-md transition">
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="font-medium">{{ t.title }}</div>
+        <div class="text-xs text-slate-500">Status: {{ t.status }} • Due: {{ t.dueAt | date:'short' }}</div>
+      </div>
+      <span class="text-xs rounded-full px-2 py-1 border">{{ t.priority }}</span>
+    </div>
+  </a>
+</div>

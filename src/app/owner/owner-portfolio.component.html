@@ -1,0 +1,31 @@
+<h2 class="text-lg font-semibold">Owner Portfolio</h2>
+
+<div class="bg-white rounded-xl shadow p-4 mt-2 flex items-center justify-between">
+  <div class="text-sm text-slate-600">Overview of your properties. Tap a card to view details.</div>
+  <button (click)="exportExpenses()" class="px-3 py-1 rounded border text-sm">Export Expenses CSV</button>
+</div>
+
+<div class="mt-3 grid gap-3 md:grid-cols-2">
+  <a *ngFor="let p of properties" [routerLink]="['/owner/property', p.id]" class="bg-white rounded-xl shadow p-4 hover:shadow-md transition block">
+    <div class="font-medium">{{ p.name }}</div>
+    <div class="text-xs text-slate-500">Code: {{ p.code }} • Campus: {{ p.campus || '-' }}</div>
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <div class="rounded border p-2">
+        <div class="text-[10px] text-slate-500">Units</div>
+        <div class="text-lg font-semibold">{{ kpis(p).units }}</div>
+      </div>
+      <div class="rounded border p-2">
+        <div class="text-[10px] text-slate-500">Open Tickets</div>
+        <div class="text-lg font-semibold">{{ kpis(p).open }}</div>
+      </div>
+      <div class="rounded border p-2">
+        <div class="text-[10px] text-slate-500">OPEX Total</div>
+        <div class="text-lg font-semibold">{{ kpis(p).opex | currency }}</div>
+      </div>
+      <div class="rounded border p-2">
+        <div class="text-[10px] text-slate-500">CAPEX Total</div>
+        <div class="text-lg font-semibold">{{ kpis(p).capex | currency }}</div>
+      </div>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,32 @@
+<h2 class="text-lg font-semibold">Properties</h2>
+
+<div class="bg-white rounded-xl shadow p-4 mt-2">
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div>
+      <label class="block text-sm font-medium">Code</label>
+      <input [(ngModel)]="code" class="mt-1 w-full rounded border px-3 py-2" placeholder="HALL-A">
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Name</label>
+      <input [(ngModel)]="name" class="mt-1 w-full rounded border px-3 py-2" placeholder="Hall A">
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Campus</label>
+      <input [(ngModel)]="campus" class="mt-1 w-full rounded border px-3 py-2" placeholder="Main">
+    </div>
+  </div>
+  <div class="pt-3">
+    <button (click)="save()" class="px-4 py-2 rounded-lg bg-slate-900 text-white">Add</button>
+    <button (click)="export()" class="ml-2 px-4 py-2 rounded-lg border">Export CSV</button>
+  </div>
+</div>
+
+<div class="mt-4 grid gap-3">
+  <div *ngFor="let p of items" class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
+    <div>
+      <div class="font-medium">{{ p.name }}</div>
+      <div class="text-xs text-slate-500">Code: {{ p.code }} • Campus: {{ p.campus || '-' }}</div>
+    </div>
+    <button (click)="del(p.id)" class="text-sm underline">Delete</button>
+  </div>
+</div>

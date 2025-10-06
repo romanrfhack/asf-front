@@ -1,0 +1,35 @@
+<h2 class="text-lg font-semibold mb-3">Admin Dashboard</h2>
+
+<!-- KPI cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Open</div>
+    <div class="text-2xl font-semibold">{{ open().length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Overdue</div>
+    <div class="text-2xl font-semibold text-red-600">{{ overdue().length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Done</div>
+    <div class="text-2xl font-semibold text-emerald-700">{{ done().length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">SLA on-time</div>
+    <div class="text-2xl font-semibold">{{ onTimePct() }}%</div>
+  </div>
+</div>
+
+<!-- Aging bars -->
+<div class="bg-white rounded-xl shadow p-4 mt-4">
+  <div class="font-medium mb-2">Aging (open tickets)</div>
+  <div class="space-y-2">
+    <div class="flex items-center gap-3" *ngFor="let k of ['0-1d','1-3d','3-7d','7d+']">
+      <div class="w-16 text-xs text-slate-500">{{ k }}</div>
+      <div class="flex-1 h-2 bg-slate-100 rounded">
+        <div class="h-2 bg-slate-800 rounded" [style.width.%]="(agingBuckets()[k] || 0) * 20"></div>
+      </div>
+      <div class="w-6 text-xs text-right">{{ agingBuckets()[k] || 0 }}</div>
+    </div>
+  </div>
+</div>

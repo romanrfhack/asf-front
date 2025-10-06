@@ -1,0 +1,36 @@
+<h2 class="text-lg font-semibold">Units</h2>
+
+<div class="bg-white rounded-xl shadow p-4 mt-2 grid gap-3 sm:grid-cols-5">
+  <div class="sm:col-span-2">
+    <label class="block text-sm font-medium">Property</label>
+    <select [(ngModel)]="propertyId" class="mt-1 w-full rounded border px-3 py-2">
+      <option value="">All</option>
+      <option *ngFor="let p of props" [value]="p.id">{{ p.name }}</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-sm font-medium">Unit Code</label>
+    <input [(ngModel)]="code" class="mt-1 w-full rounded border px-3 py-2" placeholder="101">
+  </div>
+  <div>
+    <label class="block text-sm font-medium">Floor</label>
+    <input [(ngModel)]="floor" class="mt-1 w-full rounded border px-3 py-2" placeholder="1">
+  </div>
+  <div>
+    <label class="block text-sm font-medium">Bedrooms</label>
+    <input [(ngModel)]="bedrooms" type="number" class="mt-1 w-full rounded border px-3 py-2" placeholder="2">
+  </div>
+  <div class="sm:col-span-5 pt-2">
+    <button (click)="add()" class="px-4 py-2 rounded-lg bg-slate-900 text-white">Add</button>
+    <button (click)="export()" class="ml-2 px-4 py-2 rounded-lg border">Export CSV</button>
+  </div>
+</div>
+
+<div class="mt-4 grid gap-3">
+  <div *ngFor="let u of items" class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
+    <div>
+      <div class="font-medium">Unit {{ u.code }}</div>
+      <div class="text-xs text-slate-500">Property: {{ getPropertyName(u.propertyId) }} | Floor: {{ u.floor || '-' }} | Beds: {{ u.bedrooms }}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<!-- App Shell: Header + Content + Mobile Bottom Nav -->
+<div class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+  <!-- Header -->
+  <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex items-center gap-3">
+      <img src="assets/logo-ASF.webp" class="h-8 w-auto" alt="ASF">
+      <div class="font-semibold tracking-wide">ASFM Housing Manager — Demo</div>
+      <div class="ml-auto flex items-center gap-2">
+      <!-- Offline toggle -->
+      <div class="hidden sm:flex items-center gap-2 mr-2">
+        <span class="text-xs" [class.text-rose-600]="offline.offline()">●</span>
+        <label class="text-sm">Offline</label>
+        <input type="checkbox" class="h-4 w-4" [checked]="offline.offline()" (change)="offline.setOffline($any($event.target).checked)">
+      </div>
+      <a routerLink="/sync" class="relative text-sm px-3 py-1 rounded border">
+        Sync
+        <span *ngIf="offline.pendingCount() > 0" class="absolute -top-2 -right-2 text-[10px] bg-rose-600 text-white rounded-full px-1">
+          {{ offline.pendingCount() }}
+        </span>
+      </a>
+
+        <label class="text-sm hidden sm:block">Role</label>
+        <select (change)="onRoleChange($event)" 
+                class="border rounded px-2 py-1 text-sm"
+                [value]="current() ?? ''">
+          <option value="">Select role…</option>
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-4">
+    <router-outlet></router-outlet>
+  </main>
+
+  <toast-container></toast-container>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div>LocalStorage demo • No backend • PWA-ready</div>
+      <button (click)="auth.logout()" class="underline">Logout</button>
+    </div>
+  </footer>
+
+  <!-- Bottom Nav (mobile) -->
+  <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 sm:hidden">
+    <div class="grid grid-cols-4 text-center text-xs">
+      <a routerLink="/" class="py-2">Home</a>
+      <a routerLink="/tenant/requests" class="py-2">My Requests</a>
+      <a routerLink="/admin/tickets" class="py-2">Admin</a>
+      <a routerLink="/sync" class="py-2">Sync <span *ngIf="offline.pendingCount()>0" class="ml-1 text-rose-600">●</span></a>
+    </div>
+  </nav>
+</div>

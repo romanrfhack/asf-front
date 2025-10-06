@@ -1,0 +1,26 @@
+<h2 class="text-lg font-semibold">Inspections</h2>
+
+<div class="bg-white rounded-xl shadow p-4 mt-2">
+  <div class="flex flex-wrap gap-2 items-center">
+    <div class="text-sm text-slate-500">Filter:</div>
+    <button class="px-3 py-1 rounded border" (click)="filter='all'">All</button>
+    <button class="px-3 py-1 rounded border" (click)="filter='draft'">Draft</button>
+    <button class="px-3 py-1 rounded border" (click)="filter='finalized'">Finalized</button>
+    <div class="ml-auto flex gap-2">
+      <a [routerLink]="create('move-in')" class="px-3 py-1 rounded bg-slate-900 text-white">New Move-In</a>
+      <a [routerLink]="create('move-out')" class="px-3 py-1 rounded bg-slate-900 text-white">New Move-Out</a>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3 grid gap-3">
+  <a *ngFor="let i of items" [routerLink]="['/inspections', i.id]" class="bg-white rounded-xl shadow p-4 block">
+    <div class="flex items-start justify-between">
+      <div>
+        <div class="font-medium capitalize">{{ i.type }}</div>
+        <div class="text-xs text-slate-500">Status: {{ i.status }} • Scheduled: {{ i.scheduledAt | date:'short' }}</div>
+      </div>
+      <div class="text-xs">{{ i.updatedAt | date:'short' }}</div>
+    </div>
+  </a>
+</div>

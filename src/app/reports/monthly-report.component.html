@@ -1,0 +1,108 @@
+<h2 class="text-lg font-semibold">Monthly Report</h2>
+
+<!-- Filters -->
+<div class="bg-white rounded-xl shadow p-4 mt-2">
+  <div class="grid gap-3 md:grid-cols-6">
+    <div>
+      <label class="block text-sm font-medium">Start</label>
+      <input [(ngModel)]="dateStart" type="date" class="mt-1 w-full rounded border px-3 py-2">
+    </div>
+    <div>
+      <label class="block text-sm font-medium">End</label>
+      <input [(ngModel)]="dateEnd" type="date" class="mt-1 w-full rounded border px-3 py-2">
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Campus</label>
+      <select [(ngModel)]="campus" class="mt-1 w-full rounded border px-3 py-2">
+        <option value="">All</option>
+        <option *ngFor="let c of campuses" [value]="c">{{ c }}</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Property</label>
+      <select [(ngModel)]="propertyId" class="mt-1 w-full rounded border px-3 py-2">
+        <option value="">All</option>
+        <option *ngFor="let p of properties" [value]="p.id">{{ p.name }}</option>
+      </select>
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium">Unit</label>
+      <select [(ngModel)]="unitId" class="mt-1 w-full rounded border px-3 py-2">
+        <option value="">All</option>
+        <option *ngFor="let u of units" [value]="u.id">#{{ u.code }} — {{ getPropertyNameById(u.propertyId) }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="pt-3 flex flex-wrap gap-2">
+    <button (click)="exportExpensesCsv()" class="px-3 py-1 rounded border text-sm">Export Expenses CSV</button>
+    <button (click)="exportTicketsCsv()" class="px-3 py-1 rounded border text-sm">Export Tickets CSV</button>
+    <button (click)="exportHTML()" class="px-3 py-1 rounded border text-sm">Export HTML</button>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-3">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">OPEX total</div>
+    <div class="text-2xl font-semibold">{{ expenseTotals.opex | currency }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">CAPEX total</div>
+    <div class="text-2xl font-semibold">{{ expenseTotals.capex | currency }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Tickets opened</div>
+    <div class="text-2xl font-semibold">{{ ticketsOpenedInRange.length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Tickets closed</div>
+    <div class="text-2xl font-semibold">{{ ticketsClosedInRange.length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">SLA on-time</div>
+    <div class="text-2xl font-semibold">{{ slaOnTimePct }}%</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Avg. resolution (h)</div>
+    <div class="text-2xl font-semibold">{{ avgResolutionHours }}</div>
+  </div>
+</div>
+
+<!-- Tables -->
+<div class="grid md:grid-cols-2 gap-3 mt-3">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Expenses by Category</div>
+    <div class="grid gap-2">
+      <div *ngFor="let r of byCategory" class="flex items-center justify-between text-sm">
+        <div>{{ r.category }}</div>
+        <div class="font-semibold">{{ r.total | currency }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Expenses by Campus</div>
+    <div class="grid gap-2">
+      <div *ngFor="let r of byCampus" class="flex items-center justify-between text-sm">
+        <div>{{ r.campus }}</div>
+        <div class="font-semibold">{{ r.total | currency }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sample expense list -->
+<div class="bg-white rounded-xl shadow p-4 mt-3">
+  <div class="font-medium">Expenses (sample)</div>
+  <div class="grid gap-2 mt-2">
+    <div *ngFor="let e of expenses | slice:0:10" class="rounded border p-3">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="text-sm font-medium">{{ e.type | uppercase }} • {{ e.category }}</div>
+          <div class="text-xs text-slate-500">{{ e.date | date:'mediumDate' }} — {{ e.description || '-' }}</div>
+        </div>
+        <div class="text-sm font-semibold">{{ e.amount | currency }}</div>
+      </div>
+    </div>
+  </div>
+</div>
