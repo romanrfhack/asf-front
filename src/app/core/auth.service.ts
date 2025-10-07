@@ -17,7 +17,9 @@ export class AuthService {
 
   constructor(private ls: LocalStorageService) {
     const saved = this.ls.get(KEY) as Role | null;
-    if (saved) this.roleSig.set(saved);
+    const initial: Role = saved ?? 'admin';        
+    this.roleSig.set(initial);
+    this.ls.set(KEY, initial);
   }
 
   loginAs(role: Role) {

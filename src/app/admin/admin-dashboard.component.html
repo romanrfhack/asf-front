@@ -1,35 +1,168 @@
-<h2 class="text-lg font-semibold mb-3">Admin Dashboard</h2>
-
-<!-- KPI cards -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-  <div class="bg-white rounded-xl shadow p-4">
-    <div class="text-xs text-slate-500">Open</div>
-    <div class="text-2xl font-semibold">{{ open().length }}</div>
+<!-- Header -->
+<div class="flex items-center justify-between">
+  <div>
+    <h2 class="text-xl font-semibold">Dashboard</h2>
+    <div class="text-slate-600 text-sm">Overview de operaciones, SLA y costos.</div>
   </div>
-  <div class="bg-white rounded-xl shadow p-4">
-    <div class="text-xs text-slate-500">Overdue</div>
-    <div class="text-2xl font-semibold text-red-600">{{ overdue().length }}</div>
-  </div>
-  <div class="bg-white rounded-xl shadow p-4">
-    <div class="text-xs text-slate-500">Done</div>
-    <div class="text-2xl font-semibold text-emerald-700">{{ done().length }}</div>
-  </div>
-  <div class="bg-white rounded-xl shadow p-4">
-    <div class="text-xs text-slate-500">SLA on-time</div>
-    <div class="text-2xl font-semibold">{{ onTimePct() }}%</div>
+  <div class="flex gap-2">
+    <button (click)="setRange(7)"  class="px-3 py-1 rounded-lg border text-sm" [class.bg-slate-900]="rangeDays()===7"  [class.text-white]="rangeDays()===7">7d</button>
+    <button (click)="setRange(30)" class="px-3 py-1 rounded-lg border text-sm" [class.bg-slate-900]="rangeDays()===30" [class.text-white]="rangeDays()===30">30d</button>
+    <button (click)="setRange(90)" class="px-3 py-1 rounded-lg border text-sm" [class.bg-slate-900]="rangeDays()===90" [class.text-white]="rangeDays()===90">90d</button>
   </div>
 </div>
 
-<!-- Aging bars -->
-<div class="bg-white rounded-xl shadow p-4 mt-4">
-  <div class="font-medium mb-2">Aging (open tickets)</div>
-  <div class="space-y-2">
-    <div class="flex items-center gap-3" *ngFor="let k of ['0-1d','1-3d','3-7d','7d+']">
-      <div class="w-16 text-xs text-slate-500">{{ k }}</div>
-      <div class="flex-1 h-2 bg-slate-100 rounded">
-        <div class="h-2 bg-slate-800 rounded" [style.width.%]="(agingBuckets()[k] || 0) * 20"></div>
-      </div>
-      <div class="w-6 text-xs text-right">{{ agingBuckets()[k] || 0 }}</div>
+<!-- KPI grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Total Properties</div>
+    <div class="text-2xl font-semibold">{{ totalProperties() }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Active Tickets</div>
+    <div class="text-2xl font-semibold">{{ activeTickets() }}</div>
+    <div class="text-[11px] text-slate-500 mt-1">Opened {{ openedTicketsInRange().length }} · Closed {{ closedTicketsInRange().length }}</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 flex items-center gap-3">
+    <div class="w-12 h-12 rounded-full" [ngStyle]="ringStyle(slaPct())"></div>
+    <div>
+      <div class="text-xs text-slate-500">SLA Compliance</div>
+      <div class="text-2xl font-semibold">{{ slaPct() }}%</div>
     </div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Costs ({{ rangeDays() }}d)</div>
+    <div class="text-2xl font-semibold">{{ monthlyCosts() | currency }}</div>
+  </div>
+</div>
+
+<!-- Secondary KPI -->
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Avg Turnaround</div>
+    <div class="text-2xl font-semibold">{{ avgTurnaroundDays() }} days</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">At Risk SLA</div>
+    <div class="text-2xl font-semibold text-amber-700">{{ atRiskSLA() }} tickets</div>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="text-xs text-slate-500">Aging (open)</div>
+    <div class="space-y-2 mt-2">
+      <div class="flex items-center gap-3" *ngFor="let k of ['0-1d','1-3d','3-7d','7d+']">
+        <div class="w-12 text-[11px] text-slate-500">{{ k }}</div>
+        <div class="flex-1 h-2 bg-slate-100 rounded">
+          <div class="h-2 bg-slate-800 rounded" [style.width.%]="getAgingBucketValue(k) * 20"></div>
+        </div>
+        <div class="w-6 text-[11px] text-right">{{ getAgingBucketDisplayValue(k) }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Two columns: upcoming & recent -->
+<div class="grid lg:grid-cols-2 gap-3 mt-4">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Upcoming Move-In/Out</div>
+    <div class="divide-y">
+      <div *ngFor="let i of upcomingInspections()" class="py-2 flex items-center justify-between">
+        <div>
+          <div class="font-medium">{{ i.occupantName || '—' }}</div>
+          <div class="text-xs text-slate-500 capitalize">{{ i.type }} • {{ i.scheduledAt | date:'mediumDate' }}</div>
+        </div>
+        <span class="px-2 py-0.5 text-xs rounded-full border capitalize">{{ i.type }}</span>
+      </div>
+      <div *ngIf="!upcomingInspections().length" class="text-sm text-slate-500 py-3">No upcoming inspections</div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Recent Work Orders</div>
+    <div class="space-y-2">
+      <div *ngFor="let t of recentTickets()" class="rounded border p-3">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="font-medium">{{ t.title }}</div>
+            <div class="text-[11px] text-slate-500 capitalize">Priority: {{ t.priority || 'n/a' }} • Status: {{ t.status }}</div>
+          </div>
+          <div class="text-xs text-slate-500">{{ timeLeftLabel(t.dueAt) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pipeline & Priority -->
+<div class="grid lg:grid-cols-2 gap-3 mt-4">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Ticket Pipeline</div>
+    <div class="space-y-2">
+      <div *ngFor="let s of pipeline()" class="flex items-center gap-2">
+        <div class="w-28 text-sm">{{ s.label }}</div>
+        <div class="flex-1 h-2 bg-slate-100 rounded">
+          <div class="h-2 bg-slate-800 rounded" [ngStyle]="barWidth(s.value, activeTickets())"></div>
+        </div>
+        <div class="w-8 text-right text-sm">{{ s.value }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Open by Priority</div>
+    <div class="space-y-2">
+      <div *ngFor="let p of openByPriority()" class="flex items-center gap-2">
+        <div class="w-28 text-sm capitalize">{{ p.priority }}</div>
+        <div class="flex-1 h-2 bg-slate-100 rounded">
+          <div class="h-2 rounded bg-rose-600" *ngIf="p.priority.toLowerCase().includes('urgent')" [ngStyle]="barWidth(p.value, activeTickets())"></div>
+          <div class="h-2 rounded bg-amber-500" *ngIf="p.priority.toLowerCase().includes('high')"   [ngStyle]="barWidth(p.value, activeTickets())"></div>
+          <div class="h-2 rounded bg-blue-500"  *ngIf="p.priority.toLowerCase().includes('medium')" [ngStyle]="barWidth(p.value, activeTickets())"></div>
+          <div class="h-2 rounded bg-emerald-600" *ngIf="p.priority.toLowerCase().includes('low')" [ngStyle]="barWidth(p.value, activeTickets())"></div>
+          <div class="h-2 rounded bg-slate-800" *ngIf="isOtherPriority(p.priority)" [ngStyle]="barWidth(p.value, activeTickets())"></div>
+        </div>
+        <div class="w-8 text-right text-sm">{{ p.value }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tech workload & Top properties -->
+<div class="grid lg:grid-cols-2 gap-3 mt-4">
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Technician Workload</div>
+    <div class="space-y-2">
+      <div *ngFor="let w of techWorkload()" class="flex items-center gap-2">
+        <div class="w-40 text-sm">{{ w.name }}</div>
+        <div class="flex-1 h-2 bg-slate-100 rounded">
+          <div class="h-2 bg-indigo-600 rounded" [ngStyle]="barWidth(w.open, activeTickets())"></div>
+        </div>
+        <div class="w-8 text-right text-sm">{{ w.open }}</div>
+      </div>
+      <div *ngIf="!techWorkload().length" class="text-sm text-slate-500">No technicians</div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4">
+    <div class="font-medium mb-2">Top Properties (Open Tickets)</div>
+    <div class="space-y-2">
+      <div *ngFor="let r of topProperties()" class="flex items-center gap-2">
+        <div class="w-48 text-sm">{{ r.property }}</div>
+        <div class="flex-1 h-2 bg-slate-100 rounded">
+          <div class="h-2 bg-slate-800 rounded" [ngStyle]="barWidth(r.value, activeTickets())"></div>
+        </div>
+        <div class="w-8 text-right text-sm">{{ r.value }}</div>
+      </div>
+      <div *ngIf="!topProperties().length" class="text-sm text-slate-500">No open tickets linked to units</div>
+    </div>
+  </div>
+</div>
+
+<!-- Expenses by Category -->
+<div class="bg-white rounded-xl shadow p-4 mt-4">
+  <div class="font-medium mb-2">Expenses by Category ({{ rangeDays() }}d)</div>
+  <div class="grid gap-2">
+    <div *ngFor="let r of expenseByCategory()" class="flex items-center justify-between text-sm">
+      <div>{{ r.category }}</div>
+      <div class="font-semibold">{{ r.total | currency }}</div>
+    </div>
+    <div *ngIf="!expenseByCategory().length" class="text-sm text-slate-500">No expenses in range</div>
   </div>
 </div>

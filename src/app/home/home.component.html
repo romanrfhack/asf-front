@@ -1,98 +1,96 @@
-<!-- Hero -->
 <div class="max-w-7xl mx-auto px-4 py-6">
-  <h1 class="text-xl font-semibold">ASFM Housing Manager</h1>
-  <p class="text-slate-600 mt-1 text-sm">
-    Demo funcional — prototipo PWA con datos simulados (LocalStorage).
-  </p>
-</div>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-semibold">Home</h1>
+      <p class="text-slate-600 text-sm mt-1">Role-based cards + global utilities.</p>
+    </div>
+    <span class="px-3 py-1 rounded-full border text-xs capitalize">Role: {{ currentRole() }}</span>
+  </div>
 
-<!-- Tenant -->
-<div class="max-w-7xl mx-auto px-4">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Tenant</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of tenantLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
+  <!-- Role cards -->
+  <div class="grid gap-3 mt-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <a *ngFor="let l of visibleLinks()" [routerLink]="l.route"
+       class="relative bg-white rounded-2xl shadow hover:shadow-md transition block p-5 pl-6">
+      <!-- colored side band -->
+      <div class="absolute left-0 top-0 bottom-0 w-[6px] rounded-l-2xl"
+           [ngClass]="accentClasses(l.accent).band"></div>
+
+      <!-- accent icon -->
+      <div class="absolute right-4 top-4 h-9 w-9 rounded-full flex items-center justify-center border"
+           [ngClass]="accentClasses(l.accent).icon">
+        <ng-container [ngSwitch]="l.icon">
+          <svg *ngSwitchCase="'building'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 21h18M6 21V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v16M9 8h2m-2 4h2m-2 4h2m4-8h2m-2 4h2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg *ngSwitchCase="'wrench'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 7a4 4 0 1 0 3 3l5 5-3 3-5-5a4 4 0 0 0-0-6z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg *ngSwitchCase="'kanban'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="4" width="6" height="16" rx="1.5" stroke-width="1.5"/>
+            <rect x="10.5" y="4" width="6" height="10" rx="1.5" stroke-width="1.5"/>
+            <rect x="18" y="4" width="3" height="16" rx="1.5" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'clipboard'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 4h6v3H9zM6 7h12v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'chart'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 20h18M6 16v-6M12 20V4M18 20v-9" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg *ngSwitchCase="'doc'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'calendar'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M7 3v3M17 3v3M3 8h18M5 8v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'briefcase'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 10h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'sync'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M4 4v6h6M20 20v-6h-6M6.5 17.5A7 7 0 0 0 18 12M17.5 6.5A7 7 0 0 0 6 12" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg *ngSwitchCase="'gear'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 8a4 4 0 1 1 0 8a4 4 0 0 1 0-8z" stroke-width="1.5"/>
+          </svg>
+          <svg *ngSwitchCase="'help'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2.5-3 4M12 17h.01" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </ng-container>
+      </div>
+
+      <div class="pr-12">
+        <div class="text-sm text-slate-500">{{ l.title }}</div>
+        <div class="text-lg font-semibold mt-0.5">{{ l.desc }}</div>
+      </div>
     </a>
   </div>
-</div>
 
-<!-- Owner -->
-<div class="max-w-7xl mx-auto px-4 mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Owner</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of ownerLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
-  </div>
-</div>
-
-<!-- Technician -->
-<div class="max-w-7xl mx-auto px-4 mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Technician</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of technicianLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
-  </div>
-</div>
-
-<!-- Inspections -->
-<div class="max-w-7xl mx-auto px-4 mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Inspections</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of inspectionsLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
-  </div>
-</div>
-
-<!-- Reports -->
-<div class="max-w-7xl mx-auto px-4 mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Reports</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of reportsLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
-  </div>
-</div>
-
-<!-- Admin -->
-<div class="max-w-7xl mx-auto px-4 mt-6">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Admin</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of adminLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
-  </div>
-</div>
-
-<!-- Utilities -->
-<div class="max-w-7xl mx-auto px-4 mt-6 mb-10">
-  <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Utilities</h2>
-  <div class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-    <a *ngFor="let l of utilityLinks" [routerLink]="l.route"
-       class="rounded-2xl bg-white shadow p-5 hover:shadow-md transition block">
-      <span class="text-[11px] uppercase tracking-wide text-slate-500">{{ l.badge }}</span>
-      <div class="mt-1 font-semibold">{{ l.title }}</div>
-      <p class="text-slate-600 text-sm mt-1">{{ l.desc }}</p>
-    </a>
+  <!-- Utilities (always visible) -->
+  <div class="mt-8">
+    <h2 class="text-sm uppercase tracking-wide text-slate-500 mb-2">Utilities</h2>
+    <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <a *ngFor="let l of utilities" [routerLink]="l.route"
+         class="relative bg-white rounded-2xl shadow hover:shadow-md transition block p-5 pl-6">
+        <div class="absolute left-0 top-0 bottom-0 w-[6px] rounded-l-2xl"
+             [ngClass]="accentClasses(l.accent).band"></div>
+        <div class="absolute right-4 top-4 h-9 w-9 rounded-full flex items-center justify-center border"
+             [ngClass]="accentClasses(l.accent).icon">
+          <ng-container [ngSwitch]="l.icon">
+            <svg *ngSwitchCase="'sync'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 4v6h6M20 20v-6h-6M6.5 17.5A7 7 0 0 0 18 12M17.5 6.5A7 7 0 0 0 6 12" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg *ngSwitchCase="'gear'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 8a4 4 0 1 1 0 8a4 4 0 0 1 0-8z" stroke-width="1.5"/>
+            </svg>
+            <svg *ngSwitchCase="'help'" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2.5-3 4M12 17h.01" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </ng-container>
+        </div>
+        <div class="pr-12">
+          <div class="text-sm text-slate-500">{{ l.title }}</div>
+          <div class="text-lg font-semibold mt-0.5">{{ l.desc }}</div>
+        </div>
+      </a>
+    </div>
   </div>
 </div>

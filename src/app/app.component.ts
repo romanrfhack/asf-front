@@ -9,9 +9,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule, 
-    RouterOutlet, 
-    RouterLink, 
-    RouterLinkActive,
+    RouterOutlet,     
     InstallPrompt],
   templateUrl: './app.html',
   styleUrl: './app.css'
