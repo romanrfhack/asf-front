@@ -46,12 +46,54 @@
   </footer>
 
   <!-- Bottom Nav (mobile) -->
-  <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 sm:hidden">
-    <div class="grid grid-cols-4 text-center text-xs">
-      <a routerLink="/" class="py-2">Home</a>
-      <a routerLink="/tenant/requests" class="py-2">My Requests</a>
-      <a routerLink="/admin/tickets" class="py-2">Admin</a>
-      <a routerLink="/sync" class="py-2">Sync <span *ngIf="offline.pendingCount()>0" class="ml-1 text-rose-600">●</span></a>
-    </div>
-  </nav>
+<nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 sm:hidden">
+  <div class="grid grid-cols-4 text-center text-xs">
+    <a
+      *ngFor="let it of bottomNav()"
+      [routerLink]="it.route"
+      routerLinkActive="text-slate-900 font-medium"
+      class="py-2 flex flex-col items-center justify-center gap-0.5 text-slate-600"
+      aria-current="page"
+    >
+      <!-- Iconos muy simples (SVG inline); opcionales -->
+      <ng-container [ngSwitch]="it.icon">
+        <svg *ngSwitchCase="'home'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4H9v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngSwitchCase="'requests'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 6h16M4 12h10M4 18h7" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngSwitchCase="'orders'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 6h16v12H4zM8 6V4h8v2" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngSwitchCase="'tickets'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 9h16v6H4zM8 9V7m8 2V7" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngSwitchCase="'dashboard'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 12h7V3H3zm0 9h7v-7H3zm11 0h7v-5h-7zm0-9h7V3h-7z" stroke-width="1.5"/>
+        </svg>
+        <svg *ngSwitchCase="'inspections'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 4h6v3H9zM6 7h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z" stroke-width="1.5"/>
+        </svg>
+        <svg *ngSwitchCase="'portfolio'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 10h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="1.5"/>
+        </svg>
+        <svg *ngSwitchCase="'reports'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 20h18M6 16v-6M12 20V4M18 20v-9" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngSwitchCase="'sync'" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 4v6h6M20 20v-6h-6M6.5 17.5A7 7 0 0 0 18 12M17.5 6.5A7 7 0 0 0 6 12" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </ng-container>
+
+      <span>{{ it.label }}</span>
+
+      <!-- Badge solo para items con contador (Sync) -->
+      <span *ngIf="it.badgeCount && it.badgeCount() > 0" class="inline-block text-[10px] text-rose-600">
+        • {{ it.badgeCount() }}
+      </span>
+    </a>
+  </div>
+</nav>
+
 </div>
